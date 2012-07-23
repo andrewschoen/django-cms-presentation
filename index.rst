@@ -172,8 +172,8 @@ placeholder
 
 .. include:: _templates/pykc-logo.rst
 
-CMS_PLACEHOLDER_CONF
-++++++++++++++++++++
+cms_placeholder_conf
+--------------------
 
 ::
 
@@ -259,6 +259,22 @@ menu tags
 
 .. include:: _templates/pykc-logo.rst
 
+language tags
+-------------
+
+page_language & language_chooser
+
+::
+
+    {% page_language_url de %}
+    {% page_language_url fr %}
+    {% page_language_url en %}
+
+    {% language_chooser %}
+    {% language_chooser "myapp/language_chooser.html" %}
+
+.. include:: _templates/pykc-logo.rst
+
 settings
 --------
 
@@ -310,31 +326,285 @@ settings
 Plugins
 =======
 
+Plugins are the content in django CMS.  You can use the built-in plugins, but
+the real power of plugins come from building your own.
+
+.. include:: _templates/pykc-logo.rst
+
+built-in plugins
+----------------
+
+* 'cms.plugins.file'
+* 'cms.plugins.flash'
+* 'cms.plugins.googlemap'
+* 'cms.plugins.link'
+* 'cms.plugins.picture'
+* 'cms.plugins.snippet'
+* 'cms.plugins.teaser'
+* 'cms.plugins.text'
+* 'cms.plugins.video'
+* 'cms.plugins.twitter'
+
+.. include:: _templates/pykc-logo.rst
+
+Writing your own Plugins
+========================
+
+The built-in plugins work for some situations, but it is really easy to write you own and add a ton of flexibility to the CMS.  With custom plugins you can integrate just about any other data (content) into CMS pages.
+
+.. include:: _templates/pykc-logo.rst
+
+custom plugins
+--------------
+
+We're going to be extending the standard Django Poll app from the tutorial.  First, we'll create our model. Make sure to ``syncdb``.
+
+::
+
+    from cms.models import CMSPlugin
+
+    class PollPlugin(CMSPlugin):
+        poll = models.ForeignKey('polls.Poll', related_name='plugins')
+
+        def __unicode__(self):
+          return self.poll.question
+
+.. include:: _templates/pykc-logo.rst
+
+custom plugins
+--------------
+
+Next, we need to create our plugin class.
+
+::
+    
+    from cms.plugin_base import CMSPluginBase
+    from cms.plugin_pool import plugin_pool
+    from polls.models import PollPlugin as PollPluginModel
+    from django.utils.translation import ugettext as _
+
+    class PollPlugin(CMSPluginBase):
+        model = PollPluginModel # Model where data about this plugin is saved
+        name = _("Poll Plugin") # Name of the plugin
+        render_template = "polls/plugin.html" # template to render the plugin with
+
+        def render(self, context, instance, placeholder):
+            context.update({'instance':instance})
+            return context
+
+    plugin_pool.register_plugin(PollPlugin) # register the plugin
+
+.. include:: _templates/pykc-logo.rst
+
+custom plugins
+--------------
+
+Finally, we need to create the template our plugin will render.
+
+::
+
+    <h1>{{ instance.poll.question }}</h1>
+
+    <form action="{% url polls.views.vote instance.poll.id %}" method="post">
+    {% csrf_token %}
+    {% for choice in instance.poll.choice_set.all %}
+        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+        <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br />
+    {% endfor %}
+    <input type="submit" value="Vote" />
+    </form>
+
+.. include:: _templates/pykc-logo.rst
+
+custom plugins
+--------------
+
+That's it!  Your poll app should now look like this.
+
+::
+
+    polls/
+        templates/
+            polls/
+                plugin.html
+        __init__.py
+        cms_plugins.py
+        models.py
+        tests.py
+        views.py
+
+.. include:: _templates/pykc-logo.rst
+
 Apphooks
 ========
 
-Menus
-=====
+Sometimes a plugin just isn't enough.  You can hook your own django apps into a CMS page using apphooks.
 
-Demo
-====
+CMS apps live in a file called cms_apps.py within your app folder.
 
-Closing
+.. include:: _templates/pykc-logo.rst
+
+apphooks
+--------
+
+Create cms_apps.py in the polls app and write this.
+
+::
+
+    from cms.app_base import CMSApp
+    from cms.apphook_pool import apphook_pool
+    from django.utils.translation import ugettext_lazy as _
+
+    class PollsApp(CMSApp):
+        name = _("Poll App") # give your app a name, this is required
+        urls = ["polls.urls"] # link your app to url configuration(s)
+
+    apphook_pool.register(PollsApp) # register your app
+
+**Make sure to remove your app from urls.py**
+
+.. include:: _templates/pykc-logo.rst
+
+apphooks
+--------
+
+Now open your admin in your browser and edit a CMS Page. Open the ‘Advanced Settings’ tab and choose ‘Polls App’ for your ‘Application’.
+
+Unfortunately, for these changes to take effect, you will have to restart your server. So do that and afterwards if you navigate to that CMS Page, you will see your polls application.
+
+.. include:: _templates/pykc-logo.rst
+
+apphooks
+--------
+
+Really, that's it.  Now whenever a user clicks on that page they will be taken to your own custom app.
+
+Your polls app should now look like this.
+
+::
+    
+    polls/
+        templates/
+            polls/
+                plugin.html
+        __init__.py
+        cms_apps.py
+        cms_plugins.py
+        models.py
+        tests.py
+        views.py
+
+
+.. include:: _templates/pykc-logo.rst
+
+Custom Menus
+============
+
+Your apphook might have some custom navigation you want to include in the menu.  This is how you accompish that.
+
+First, create a menus.py in the polls app.
+
+
+.. include:: _templates/pykc-logo.rst
+
+custom menus
+------------
+
+::
+
+    from cms.menu_bases import CMSAttachMenu
+    from menus.base import Menu, NavigationNode
+    from menus.menu_pool import menu_pool
+    from django.core.urlresolvers import reverse
+    from django.utils.translation import ugettext_lazy as _
+    from polls.models import Poll
+
+    class PollsMenu(CMSAttachMenu):
+        name = _("Polls Menu") # give the menu a name, this is required.
+
+        def get_nodes(self, request):
+            nodes = []
+            for poll in Poll.objects.all():
+                node = NavigationNode(
+                    poll.question,
+                    reverse('polls.views.detail', args=(poll.pk,)),
+                    poll.pk
+                )
+                nodes.append(node)
+            return nodes
+    menu_pool.register_menu(PollsMenu) # register the menu.
+
+.. include:: _templates/pykc-logo.rst
+
+custom menus
+------------
+
+Now, we need to attach this menu to the apphook.
+
+polls/cms_apps.py
+
+::
+
+    from cms.app_base import CMSApp
+    from cms.apphook_pool import apphook_pool
+    from polls.menus import PollsMenu
+    from django.utils.translation import ugettext_lazy as _
+
+    class PollsApp(CMSApp):
+        name = _("Poll App")
+        urls = ["polls.urls"]
+        menus = [PollsMenu] # attach a CMSAttachMenu to this apphook.
+    apphook_pool.register(PollsApp)
+
+.. include:: _templates/pykc-logo.rst
+
+custom menus
+------------
+
+Doesn't get any easier.  Your polls app should look like this now.
+
+::
+
+    polls/
+        templates/
+            polls/
+                plugin.html
+        __init__.py
+        cms_apps.py
+        cms_plugins.py
+        menus.py
+        models.py
+        tests.py
+        views.py
+
+.. include:: _templates/pykc-logo.rst
+
+Demo Time!
+==========
+
+.. include:: _templates/pykc-logo.rst
+
+Just kidding, but I built you one. Download the code and run it locally, it's easy.
+===================================================================================
+
+https://github.com/andrewschoen/django-cms-demo
+
+.. include:: _templates/pykc-logo.rst
+
+Thanks!
 =======
 
+Andrew Schoen | @andrewschoen | @pythonkc
+
+https://andrewschoen.github.com/django-cms-presentation
+
+https://github.com/andrewschoen/django-cms-presentation
+
+.. include:: _templates/pykc-logo.rst
 
 
-        
 
 
-
-
-
-
-    
-
-
-    
 
 
 
