@@ -500,7 +500,7 @@ Your polls app should now look like this.
 Custom Menus
 ============
 
-Your apphook might have some custom navigation you want to include in the menu.  This is how you accompish that.
+Your apphook might have some custom navigation you want to include in the menu.  This is how you accomplish that.
 
 First, create a menus.py in the polls app.
 
@@ -576,6 +576,26 @@ Doesn't get any easier.  Your polls app should look like this now.
         models.py
         tests.py
         views.py
+
+.. include:: _templates/pykc-logo.rst
+
+Extensions
+==========
+
+Some 3rd party apps you might want to try out.
+
+.. include:: _templates/pykc-logo.rst
+
+extensions
+----------
+
+django-filer: https://github.com/stefanfoulis/django-filer
+
+cmsplugin-filer: https://github.com/stefanfoulis/cmsplugin-filer
+
+django-reversion: https://github.com/etianen/django-reversion
+
+cmsplugin-blog: https://github.com/fivethreeo/cmsplugin-blog
 
 .. include:: _templates/pykc-logo.rst
 
