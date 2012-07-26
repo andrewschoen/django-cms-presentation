@@ -597,6 +597,8 @@ django-reversion: https://github.com/etianen/django-reversion
 
 cmsplugin-blog: https://github.com/fivethreeo/cmsplugin-blog
 
+django-cms-redirects: https://github.com/salvaorenick/django-cms-redirects
+
 .. include:: _templates/pykc-logo.rst
 
 Demo Time!
