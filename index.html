@@ -101,18 +101,21 @@ other options out there.</p>
 <img alt="_images/all_the_features.jpeg" class="all-the-features" src="_images/all_the_features.jpeg" />
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
+<article class="slide level-1" id="demo-code">
+<h1>Demo Code<a class="headerlink" href="#demo-code" title="Permalink to this headline">¶</a></h1>
+<p>Check it out &amp; follow along with the examples in the next slides.  Most of
+what we're about to talk about is represented there.</p>
+<p><a class="reference external" href="https://github.com/andrewschoen/django-cms-demo">https://github.com/andrewschoen/django-cms-demo</a></p>
+<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
+</article>
 <article class="slide level-1" id="templates">
 <h1>Templates<a class="headerlink" href="#templates" title="Permalink to this headline">¶</a></h1>
-<p>Templates are the building blocks of content in a CMS.</p>
-<p>Pages are created by templates and attached to menus.</p>
-<p>In django CMS, templates have placeholders and placeholders have plugins.</p>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 
 </article>
 <article class="slide level-2" id="id1">
-<h2>Templates<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>base.html</p>
-<div class="highlight-python"><pre>{% load cms_tags sekizai_tags %}
+<h2>templates<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>{% load cms_tags menu_tags sekizai_tags %}
 &lt;html&gt;
   &lt;head&gt;
       {% render_block 'css' %}
@@ -120,28 +123,16 @@ other options out there.</p>
   &lt;body&gt;
       {% cms_toolbar %}
       &lt;ul&gt;{% show_menu %}&lt;/ul&gt;
-      {% block base_content %}{% endblock %}
+      {% placeholder content %}
       {% render_block 'js' %}
   &lt;/body&gt;
 &lt;/html&gt;</pre>
 </div>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
-<article class="slide level-2" id="id2">
-<h2>Templates<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>home.html</p>
-<div class="highlight-python"><pre>{% extends "base.html" %}
-{% load cms_tags %}
-
-{% block base_content %}
-  {% placeholder homepage_content %}
-{% endblock %}</pre>
-</div>
-<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
-</article>
 <article class="slide level-1" id="template-tags-settings">
 <h1>Template Tags &amp; Settings<a class="headerlink" href="#template-tags-settings" title="Permalink to this headline">¶</a></h1>
-<p>Commonly used template tags and settings for creating templates.</p>
+<p>Commonly used template tags and settings.</p>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 
 </article>
@@ -225,7 +216,7 @@ other options out there.</p>
 </article>
 <article class="slide level-2" id="menu-tags">
 <h2>menu tags<a class="headerlink" href="#menu-tags" title="Permalink to this headline">¶</a></h2>
-<p><strong>show_menu &amp; show_menu_below_id</strong></p>
+<p>show_menu &amp; show_menu_below_id</p>
 <div class="highlight-python"><pre># start_level, end_level, extra_inactive, extra_active
 
 {% show_menu 0 100 0 100 %} # default
@@ -234,7 +225,7 @@ other options out there.</p>
 {% show_menu_below_id "meta" %}
 {% show_menu_below_id "meta" 0 100 100 100 "myapp/menu.html" %}</pre>
 </div>
-<p><strong>show_sub_menu &amp; show_breadcrumb</strong></p>
+<p>show_sub_menu &amp; show_breadcrumb</p>
 <div class="highlight-python"><pre>{% show_sub_menu 1 %}
 {% show_breadcrumb 2 "myapp/breadcrumb.html" %}</pre>
 </div>
@@ -274,8 +265,8 @@ other options out there.</p>
 </div>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
-<article class="slide level-2" id="id3">
-<h2>settings<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<article class="slide level-2" id="id2">
+<h2>settings<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">CMS_HIDE_UNTRANSLATED</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="n">CMS_LANGUAGES</span> <span class="o">=</span> <span class="p">(</span>
     <span class="p">(</span><span class="s">&#39;de&#39;</span><span class="p">,</span> <span class="n">gettext</span><span class="p">(</span><span class="s">&#39;German&#39;</span><span class="p">)),</span>
@@ -297,8 +288,8 @@ other options out there.</p>
 </article>
 <article class="slide level-1" id="plugins">
 <h1>Plugins<a class="headerlink" href="#plugins" title="Permalink to this headline">¶</a></h1>
-<p>Plugins are the content in django CMS.  You can use the built-in plugins, but
-the real power of plugins come from building your own.</p>
+<p>You can use the built-in plugins, but the real power of plugins
+come from building your own.</p>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 
 </article>
@@ -320,13 +311,39 @@ the real power of plugins come from building your own.</p>
 </article>
 <article class="slide level-1" id="writing-your-own-plugins">
 <h1>Writing your own Plugins<a class="headerlink" href="#writing-your-own-plugins" title="Permalink to this headline">¶</a></h1>
-<p>The built-in plugins work for some situations, but it is really easy to write you own and add a ton of flexibility to the CMS.  With custom plugins you can integrate just about any other data (content) into CMS pages.</p>
+<p>With custom plugins you can pull content from other django apps, create UI
+elements or do just about anything really.</p>
+<p>It's like a Django view you can put inside a template.</p>
+<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
+</article>
+<article class="slide level-1" id="custom-plugins">
+<h1>Custom Plugins<a class="headerlink" href="#custom-plugins" title="Permalink to this headline">¶</a></h1>
+<p>We're going to be extending the standard Poll app from the Django tutorial.
+If you don't have experience with Django, start here.</p>
+<p><a class="reference external" href="https://docs.djangoproject.com/en/1.4/intro/tutorial01/">https://docs.djangoproject.com/en/1.4/intro/tutorial01/</a></p>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 
 </article>
-<article class="slide level-2" id="custom-plugins">
-<h2>custom plugins<a class="headerlink" href="#custom-plugins" title="Permalink to this headline">¶</a></h2>
-<p>We're going to be extending the standard Django Poll app from the tutorial.  First, we'll create our model. Make sure to <tt class="docutils literal"><span class="pre">syncdb</span></tt>.</p>
+<article class="slide level-2" id="id3">
+<h2>custom plugins<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>polls/models.py</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Poll</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">question</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">pub_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="s">&#39;date published&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Choice</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">poll</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Poll</span><span class="p">)</span>
+    <span class="n">choice</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">votes</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
+</article>
+<article class="slide level-2" id="id4">
+<h2>custom plugins<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>polls/models.py</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">cms.models</span> <span class="kn">import</span> <span class="n">CMSPlugin</span>
 
 <span class="k">class</span> <span class="nc">PollPlugin</span><span class="p">(</span><span class="n">CMSPlugin</span><span class="p">):</span>
@@ -338,9 +355,9 @@ the real power of plugins come from building your own.</p>
 </div>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
-<article class="slide level-2" id="id4">
-<h2>custom plugins<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>Next, we need to create our plugin class.</p>
+<article class="slide level-2" id="id5">
+<h2>custom plugins<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>polls/cms_plugins.py</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">cms.plugin_base</span> <span class="kn">import</span> <span class="n">CMSPluginBase</span>
 <span class="kn">from</span> <span class="nn">cms.plugin_pool</span> <span class="kn">import</span> <span class="n">plugin_pool</span>
 <span class="kn">from</span> <span class="nn">polls.models</span> <span class="kn">import</span> <span class="n">PollPlugin</span> <span class="k">as</span> <span class="n">PollPluginModel</span>
@@ -360,9 +377,9 @@ the real power of plugins come from building your own.</p>
 </div>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
-<article class="slide level-2" id="id5">
-<h2>custom plugins<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<p>Finally, we need to create the template our plugin will render.</p>
+<article class="slide level-2" id="id6">
+<h2>custom plugins<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>polls/plugin.html</p>
 <div class="highlight-python"><pre>&lt;h1&gt;{{ instance.poll.question }}&lt;/h1&gt;
 
 &lt;form action="{% url polls.views.vote instance.poll.id %}" method="post"&gt;
@@ -376,31 +393,15 @@ the real power of plugins come from building your own.</p>
 </div>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
-<article class="slide level-2" id="id6">
-<h2>custom plugins<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
-<p>That's it!  Your poll app should now look like this.</p>
-<div class="highlight-python"><pre>polls/
-    templates/
-        polls/
-            plugin.html
-    __init__.py
-    cms_plugins.py
-    models.py
-    tests.py
-    views.py</pre>
-</div>
-<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
-</article>
 <article class="slide level-1" id="apphooks">
 <h1>Apphooks<a class="headerlink" href="#apphooks" title="Permalink to this headline">¶</a></h1>
-<p>Sometimes a plugin just isn't enough.  You can hook your own django apps into a CMS page using apphooks.</p>
-<p>CMS apps live in a file called cms_apps.py within your app folder.</p>
+<p>You can hook your own django apps into a CMS page using apphooks.</p>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 
 </article>
 <article class="slide level-2" id="id7">
 <h2>apphooks<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
-<p>Create cms_apps.py in the polls app and write this.</p>
+<p>polls/cms_app.py</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">cms.app_base</span> <span class="kn">import</span> <span class="n">CMSApp</span>
 <span class="kn">from</span> <span class="nn">cms.apphook_pool</span> <span class="kn">import</span> <span class="n">apphook_pool</span>
 <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">ugettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
@@ -412,41 +413,16 @@ the real power of plugins come from building your own.</p>
 <span class="n">apphook_pool</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">PollsApp</span><span class="p">)</span> <span class="c"># register your app</span>
 </pre></div>
 </div>
-<p><strong>Make sure to remove your app from urls.py</strong></p>
-<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
-</article>
-<article class="slide level-2" id="id8">
-<h2>apphooks<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
-<p>Now open your admin in your browser and edit a CMS Page. Open the ‘Advanced Settings’ tab and choose ‘Polls App’ for your ‘Application’.</p>
-<p>Unfortunately, for these changes to take effect, you will have to restart your server. So do that and afterwards if you navigate to that CMS Page, you will see your polls application.</p>
-<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
-</article>
-<article class="slide level-2" id="id9">
-<h2>apphooks<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
-<p>Really, that's it.  Now whenever a user clicks on that page they will be taken to your own custom app.</p>
-<p>Your polls app should now look like this.</p>
-<div class="highlight-python"><pre>polls/
-    templates/
-        polls/
-            plugin.html
-    __init__.py
-    cms_apps.py
-    cms_plugins.py
-    models.py
-    tests.py
-    views.py</pre>
-</div>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
 <article class="slide level-1" id="custom-menus">
 <h1>Custom Menus<a class="headerlink" href="#custom-menus" title="Permalink to this headline">¶</a></h1>
-<p>Your apphook might have some custom navigation you want to include in the menu.  This is how you accomplish that.</p>
-<p>First, create a menus.py in the polls app.</p>
+<p>These typically live in menus.py in your app directory.</p>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 
 </article>
-<article class="slide level-2" id="id10">
-<h2>custom menus<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<article class="slide level-2" id="id8">
+<h2>custom menus<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">cms.menu_bases</span> <span class="kn">import</span> <span class="n">CMSAttachMenu</span>
 <span class="kn">from</span> <span class="nn">menus.base</span> <span class="kn">import</span> <span class="n">Menu</span><span class="p">,</span> <span class="n">NavigationNode</span>
 <span class="kn">from</span> <span class="nn">menus.menu_pool</span> <span class="kn">import</span> <span class="n">menu_pool</span>
@@ -472,10 +448,9 @@ the real power of plugins come from building your own.</p>
 </div>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
-<article class="slide level-2" id="id11">
-<h2>custom menus<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
-<p>Now, we need to attach this menu to the apphook.</p>
-<p>polls/cms_apps.py</p>
+<article class="slide level-2" id="id9">
+<h2>custom menus<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>polls/cms_app.py</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">cms.app_base</span> <span class="kn">import</span> <span class="n">CMSApp</span>
 <span class="kn">from</span> <span class="nn">cms.apphook_pool</span> <span class="kn">import</span> <span class="n">apphook_pool</span>
 <span class="kn">from</span> <span class="nn">polls.menus</span> <span class="kn">import</span> <span class="n">PollsMenu</span>
@@ -490,45 +465,19 @@ the real power of plugins come from building your own.</p>
 </div>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
-<article class="slide level-2" id="id12">
-<h2>custom menus<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
-<p>Doesn't get any easier.  Your polls app should look like this now.</p>
-<div class="highlight-python"><pre>polls/
-    templates/
-        polls/
-            plugin.html
-    __init__.py
-    cms_apps.py
-    cms_plugins.py
-    menus.py
-    models.py
-    tests.py
-    views.py</pre>
-</div>
-<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
-</article>
 <article class="slide level-1" id="extensions">
 <h1>Extensions<a class="headerlink" href="#extensions" title="Permalink to this headline">¶</a></h1>
 <p>Some 3rd party apps you might want to try out.</p>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 
 </article>
-<article class="slide level-2" id="id13">
-<h2>extensions<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<article class="slide level-2" id="id10">
+<h2>extensions<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <p>django-filer: <a class="reference external" href="https://github.com/stefanfoulis/django-filer">https://github.com/stefanfoulis/django-filer</a></p>
 <p>cmsplugin-filer: <a class="reference external" href="https://github.com/stefanfoulis/cmsplugin-filer">https://github.com/stefanfoulis/cmsplugin-filer</a></p>
 <p>django-reversion: <a class="reference external" href="https://github.com/etianen/django-reversion">https://github.com/etianen/django-reversion</a></p>
 <p>cmsplugin-blog: <a class="reference external" href="https://github.com/fivethreeo/cmsplugin-blog">https://github.com/fivethreeo/cmsplugin-blog</a></p>
 <p>django-cms-redirects: <a class="reference external" href="https://github.com/salvaorenick/django-cms-redirects">https://github.com/salvaorenick/django-cms-redirects</a></p>
-<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
-</article>
-<article class="slide level-1" id="demo-time">
-<h1>Demo Time!<a class="headerlink" href="#demo-time" title="Permalink to this headline">¶</a></h1>
-<img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
-</article>
-<article class="slide level-1" id="just-kidding-but-i-built-you-one-download-the-code-and-run-it-locally-it-s-easy">
-<h1>Just kidding, but I built you one. Download the code and run it locally, it's easy.<a class="headerlink" href="#just-kidding-but-i-built-you-one-download-the-code-and-run-it-locally-it-s-easy" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://github.com/andrewschoen/django-cms-demo">https://github.com/andrewschoen/django-cms-demo</a></p>
 <img alt="_images/pykc-vertical-small.jpg" class="pykc-logo" src="_images/pykc-vertical-small.jpg" />
 </article>
 <article class="slide level-1" id="thanks">
