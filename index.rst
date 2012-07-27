@@ -87,22 +87,14 @@ Plus, everything that comes with Django. That's a lot.
 Templates
 =========
 
-Templates are the building blocks of content in a CMS.  
-
-Pages are created by templates and attached to menus.
-
-In django CMS, templates have placeholders and placeholders have plugins.
-
 .. include:: _templates/pykc-logo.rst
 
-Templates
+templates
 ---------
-
-base.html
 
 ::
 
-    {% load cms_tags sekizai_tags %}
+    {% load cms_tags menu_tags sekizai_tags %}
     <html>
       <head>
           {% render_block 'css' %}
@@ -110,29 +102,12 @@ base.html
       <body>
           {% cms_toolbar %}
           <ul>{% show_menu %}</ul>
-          {% block base_content %}{% endblock %}
+          {% placeholder content %}
           {% render_block 'js' %}
       </body>
     </html>
 
 .. include:: _templates/pykc-logo.rst
-
-Templates
----------
-
-home.html
-
-::
-
-    {% extends "base.html" %}
-    {% load cms_tags %}
-
-    {% block base_content %}
-      {% placeholder homepage_content %}
-    {% endblock %}
-
-.. include:: _templates/pykc-logo.rst
-
 
 Template Tags & Settings
 ========================
@@ -237,7 +212,7 @@ page_url & page_attribute
 menu tags
 ---------
 
-**show_menu & show_menu_below_id**
+show_menu & show_menu_below_id
 
 ::
 
@@ -249,7 +224,7 @@ menu tags
     {% show_menu_below_id "meta" %}
     {% show_menu_below_id "meta" 0 100 100 100 "myapp/menu.html" %}
 
-**show_sub_menu & show_breadcrumb**
+show_sub_menu & show_breadcrumb
 
 ::
 
@@ -326,8 +301,8 @@ settings
 Plugins
 =======
 
-Plugins are the content in django CMS.  You can use the built-in plugins, but
-the real power of plugins come from building your own.
+You can use the built-in plugins, but the real power of plugins 
+come from building your own.
 
 .. include:: _templates/pykc-logo.rst
 
@@ -350,14 +325,46 @@ built-in plugins
 Writing your own Plugins
 ========================
 
-The built-in plugins work for some situations, but it is really easy to write you own and add a ton of flexibility to the CMS.  With custom plugins you can integrate just about any other data (content) into CMS pages.
+With custom plugins you can pull content from other django apps, create UI
+elements or do just about anything really.
+
+It's like a Django view you can put inside a template.
+
+.. include:: _templates/pykc-logo.rst
+
+Custom Plugins
+==============
+
+We're going to be extending the standard Poll app from the Django tutorial.  First, we'll create our models. Make sure to ``syncdb``.
+
+https://docs.djangoproject.com/en/1.4/intro/tutorial01/
 
 .. include:: _templates/pykc-logo.rst
 
 custom plugins
 --------------
 
-We're going to be extending the standard Django Poll app from the tutorial.  First, we'll create our model. Make sure to ``syncdb``.
+polls/models.py
+
+::
+
+    from django.db import models
+
+    class Poll(models.Model):
+        question = models.CharField(max_length=200)
+        pub_date = models.DateTimeField('date published')
+
+    class Choice(models.Model):
+        poll = models.ForeignKey(Poll)
+        choice = models.CharField(max_length=200)
+        votes = models.IntegerField(default=0)
+
+.. include:: _templates/pykc-logo.rst
+
+custom plugins
+--------------
+
+polls/models.py
 
 ::
 
@@ -374,7 +381,7 @@ We're going to be extending the standard Django Poll app from the tutorial.  Fir
 custom plugins
 --------------
 
-Next, we need to create our plugin class.
+polls/cms_plugins.py
 
 ::
     
@@ -399,7 +406,7 @@ Next, we need to create our plugin class.
 custom plugins
 --------------
 
-Finally, we need to create the template our plugin will render.
+polls/plugin.html
 
 ::
 
@@ -416,38 +423,17 @@ Finally, we need to create the template our plugin will render.
 
 .. include:: _templates/pykc-logo.rst
 
-custom plugins
---------------
-
-That's it!  Your poll app should now look like this.
-
-::
-
-    polls/
-        templates/
-            polls/
-                plugin.html
-        __init__.py
-        cms_plugins.py
-        models.py
-        tests.py
-        views.py
-
-.. include:: _templates/pykc-logo.rst
-
 Apphooks
 ========
 
-Sometimes a plugin just isn't enough.  You can hook your own django apps into a CMS page using apphooks.
-
-CMS apps live in a file called cms_apps.py within your app folder.
+You can hook your own django apps into a CMS page using apphooks.
 
 .. include:: _templates/pykc-logo.rst
 
 apphooks
 --------
 
-Create cms_apps.py in the polls app and write this.
+polls/cms_app.py
 
 ::
 
@@ -461,49 +447,10 @@ Create cms_apps.py in the polls app and write this.
 
     apphook_pool.register(PollsApp) # register your app
 
-**Make sure to remove your app from urls.py**
-
-.. include:: _templates/pykc-logo.rst
-
-apphooks
---------
-
-Now open your admin in your browser and edit a CMS Page. Open the ‘Advanced Settings’ tab and choose ‘Polls App’ for your ‘Application’.
-
-Unfortunately, for these changes to take effect, you will have to restart your server. So do that and afterwards if you navigate to that CMS Page, you will see your polls application.
-
-.. include:: _templates/pykc-logo.rst
-
-apphooks
---------
-
-Really, that's it.  Now whenever a user clicks on that page they will be taken to your own custom app.
-
-Your polls app should now look like this.
-
-::
-    
-    polls/
-        templates/
-            polls/
-                plugin.html
-        __init__.py
-        cms_apps.py
-        cms_plugins.py
-        models.py
-        tests.py
-        views.py
-
-
 .. include:: _templates/pykc-logo.rst
 
 Custom Menus
 ============
-
-Your apphook might have some custom navigation you want to include in the menu.  This is how you accomplish that.
-
-First, create a menus.py in the polls app.
-
 
 .. include:: _templates/pykc-logo.rst
 
@@ -539,9 +486,7 @@ custom menus
 custom menus
 ------------
 
-Now, we need to attach this menu to the apphook.
-
-polls/cms_apps.py
+polls/cms_app.py
 
 ::
 
@@ -555,27 +500,6 @@ polls/cms_apps.py
         urls = ["polls.urls"]
         menus = [PollsMenu] # attach a CMSAttachMenu to this apphook.
     apphook_pool.register(PollsApp)
-
-.. include:: _templates/pykc-logo.rst
-
-custom menus
-------------
-
-Doesn't get any easier.  Your polls app should look like this now.
-
-::
-
-    polls/
-        templates/
-            polls/
-                plugin.html
-        __init__.py
-        cms_apps.py
-        cms_plugins.py
-        menus.py
-        models.py
-        tests.py
-        views.py
 
 .. include:: _templates/pykc-logo.rst
 
