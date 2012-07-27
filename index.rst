@@ -84,6 +84,16 @@ Plus, everything that comes with Django. That's a lot.
 
 .. include:: _templates/pykc-logo.rst
 
+Demo Code
+=========
+
+Check it out & follow along with the examples in the next slides.  Most of
+what we're about to talk about is represented there.
+
+https://github.com/andrewschoen/django-cms-demo
+
+.. include:: _templates/pykc-logo.rst
+
 Templates
 =========
 
@@ -112,7 +122,7 @@ templates
 Template Tags & Settings
 ========================
 
-Commonly used template tags and settings for creating templates.
+Commonly used template tags and settings.
 
 .. include:: _templates/pykc-logo.rst
 
@@ -335,7 +345,8 @@ It's like a Django view you can put inside a template.
 Custom Plugins
 ==============
 
-We're going to be extending the standard Poll app from the Django tutorial.  First, we'll create our models. Make sure to ``syncdb``.
+We're going to be extending the standard Poll app from the Django tutorial.
+If you don't have experience with Django, start here.
 
 https://docs.djangoproject.com/en/1.4/intro/tutorial01/
 
@@ -452,6 +463,8 @@ polls/cms_app.py
 Custom Menus
 ============
 
+These typically live in menus.py in your app directory.
+
 .. include:: _templates/pykc-logo.rst
 
 custom menus
@@ -525,17 +538,6 @@ django-cms-redirects: https://github.com/salvaorenick/django-cms-redirects
 
 .. include:: _templates/pykc-logo.rst
 
-Demo Time!
-==========
-
-.. include:: _templates/pykc-logo.rst
-
-Just kidding, but I built you one. Download the code and run it locally, it's easy.
-===================================================================================
-
-https://github.com/andrewschoen/django-cms-demo
-
-.. include:: _templates/pykc-logo.rst
 
 Thanks!
 =======
