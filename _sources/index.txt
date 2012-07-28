@@ -6,6 +6,8 @@ django CMS: Friends don't let friends use Drupal
 
 Andrew Schoen | @andrewschoen | @pythonkc
 
+https://andrewschoen.github.com
+
 .. include:: _templates/pykc-logo.rst
 
  
@@ -547,6 +549,8 @@ Andrew Schoen | @andrewschoen | @pythonkc
 https://andrewschoen.github.com/django-cms-presentation
 
 https://github.com/andrewschoen/django-cms-presentation
+
+https://andrewschoen.github.com
 
 .. include:: _templates/pykc-logo.rst
 
